@@ -1,0 +1,109 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 2%;        /* #050505 */
+    --foreground: 0 0% 100%;       /* #FFFFFF */
+    --card: 0 0% 7%;              /* #111111 */
+    --card-foreground: 0 0% 100%;
+    --popover: 0 0% 5%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 217 91% 60%;       /* #3B82F6 */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 8%;         /* #0D0D0D */
+    --secondary-foreground: 0 0% 100%;
+    --muted: 240 5% 48%;          /* #71717A */
+    --muted-foreground: 240 5% 63%; /* #A1A1AA */
+    --accent: 217 91% 60%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;     /* #EF4444 */
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 14%;            /* #232323 */
+    --input: 0 0% 9%;
+    --ring: 217 91% 60%;
+    --radius: 0.75rem;
+  }
+}
+
+body {
+  color: hsl(var(--foreground));
+  background-color: hsl(var(--background));
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #050505;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #232323;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #333333;
+}
+
+/* React Flow custom visual improvements */
+.react-flow__renderer {
+  background-color: #050505 !important;
+}
+
+.react-flow__handle {
+  width: 6px !important;
+  height: 6px !important;
+  background: #3B82F6 !important;
+  border: 1px solid #050505 !important;
+}
+
+.react-flow__edge-path {
+  stroke: #232323 !important;
+  stroke-width: 2 !important;
+}
+
+.react-flow__edge.animated .react-flow__edge-path {
+  stroke: #3B82F6 !important;
+  stroke-dasharray: 5;
+  animation: dash 1s linear infinite;
+}
+
+@keyframes dash {
+  from {
+    stroke-dashoffset: 10;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Pulse animation for running nodes */
+.pulse-blue {
+  box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+  animation: pulse-blue 1.5s infinite cubic-bezier(0.66, 0, 0, 1);
+}
+
+@keyframes pulse-blue {
+  to {
+    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+  }
+}
+
+/* Card highlight effects */
+.glow-border {
+  border-color: #232323;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glow-border:hover {
+  border-color: #3b82f644;
+  box-shadow: 0 0 20px #3b82f611;
+}
