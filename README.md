@@ -8,7 +8,7 @@ Welcome to **CONSENSUS**, an intelligent investment research platform that simul
 
 - **Direct ZIP Download Link**: [Download CONSENSUS Project ZIP](https://github.com/sahilkr28/CONSENSUS/archive/refs/heads/main.zip) (Publicly Accessible)
 - **GitHub Repository**: [sahilkr28/CONSENSUS](https://github.com/sahilkr28/CONSENSUS)
-- **Vercel link**: 
+- **Vercel link**: consensus-umber.vercel.app
 
 ---
 
