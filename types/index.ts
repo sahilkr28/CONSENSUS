@@ -125,6 +125,7 @@ export interface JudgeResult {
   strongestEvidence: string[];
   weakestEvidence: string[];
   missingInformation: string[];
+  chairpersonReason?: string;
 }
 
 export interface ConsensusScore {

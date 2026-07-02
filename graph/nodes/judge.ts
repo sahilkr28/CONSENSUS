@@ -15,6 +15,7 @@ const defaultResult = {
   strongestEvidence: [],
   weakestEvidence: [],
   missingInformation: ['Comprehensive dataset'],
+  chairpersonReason: 'The committee was unable to build a definitive consensus due to insufficient or conflicting data, leading to a neutral stance.',
 };
 
 /**

@@ -119,4 +119,5 @@ export const JudgeResultSchema = z.object({
   strongestEvidence: z.array(z.string()),
   weakestEvidence: z.array(z.string()),
   missingInformation: z.array(z.string()),
+  chairpersonReason: z.string().optional(),
 });

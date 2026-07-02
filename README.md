@@ -1,132 +1,151 @@
 # CONSENSUS: Multi-Agent AI Investment Research Platform
 
-CONSENSUS is a production-grade investment research committee simulation built using Next.js 15, TypeScript, LangGraph.js, and the Gemini 2.5 Flash LLM. Instead of relying on a single LLM prompt, CONSENSUS decomposes investment research into specialized AI agents that independently evaluate financial health, product moats, news sentiment, and industry growth, then hold a formal debate to produce evidence-linked consensus recommendations.
+Welcome to **CONSENSUS**, an intelligent investment research platform that simulates a professional investment committee to analyze stocks. Instead of relying on a single AI prompt, CONSENSUS uses a team of specialized AI agents that research, debate, and verify information before delivering a final consensus recommendation.
 
 ---
 
-## Architecture Overview
+## Project Download & Links
 
-```mermaid
-graph TD
-    User([User Search]) --> API_Resolve[GET /api/resolve/:query]
-    API_Resolve --> Disambig[Disambiguation Dialog / Picker]
-    Disambig --> API_Analyze[POST /api/analyze]
-    
-    subgraph AI Orchestration Layer (LangGraph)
-        API_Analyze --> Planner[Planner Agent]
-        Planner --> Resolver[Ticker Resolver]
-        Resolver --> Coordinator[Research Coordinator]
-        
-        Coordinator --> Fin[Financial Analyst]
-        Coordinator --> Bus[Business Analyst]
-        Coordinator --> News[News Analyst]
-        Coordinator --> Mkt[Market Analyst]
-        
-        Fin --> Collector[Evidence Collector]
-        Bus --> Collector
-        News --> Collector
-        Mkt --> Collector
-        
-        Collector --> Bull[Bull Analyst]
-        Collector --> Bear[Bear Analyst]
-        Collector --> Risk[Risk Analyst]
-        
-        Bull --> Judge[Judge Agent CIO]
-        Bear --> Judge
-        Risk --> Judge
-        
-        Judge --> Consensus[Consensus Engine]
-        Consensus --> Report[Report Generator]
-    end
-    
-    Report --> Dashboard[React Flow Visualizer & Live Report Dashboard]
-```
-
-### Presentation & Components Tree
-
-```mermaid
-graph TD
-    App[App Container] --> Layout[RootLayout]
-    Layout --> Navbar[Navbar Navigation]
-    Layout --> DashboardView[Dashboard View]
-    Layout --> Footer[Footer Disclaimer]
-    
-    DashboardView --> Header[Company Header & Logo]
-    DashboardView --> RecCard[Recommendation & Stance Card]
-    DashboardView --> Grid[Metrics Grid & Recharts Line Chart]
-    DashboardView --> Tabs[Analyst Cards & Debate Panels]
-    DashboardView --> Flow[React Flow Visualizer Map]
-    DashboardView --> Vault[Evidence Panel Vault]
-```
+- **Direct ZIP Download Link**: [Download CONSENSUS Project ZIP](https://github.com/sahilkr28/CONSENSUS/archive/refs/heads/main.zip) (Publicly Accessible)
+- **GitHub Repository**: [sahilkr28/CONSENSUS](https://github.com/sahilkr28/CONSENSUS)
+- **Vercel link**: 
 
 ---
 
-## Product Principles
+## Overview — What it Does
 
-1. **Explainability over Magic**: Every claim must be traceable to the retrieved evidence. Single opaque recommendations are rejected.
-2. **Evidence Before Reasoning**: Agents are prohibited from using prior knowledge; they must declare "Insufficient evidence" if research is lacking.
-3. **Small Specialized Agents**: Each agent owns exactly one responsibility, one system prompt, and one schema.
-4. **Legal Compliance**: Non-advice warnings are persistently displayed on every recommendation dashboard.
+CONSENSUS acts as an AI-powered Chief Investment Officer (CIO) and Research Committee:
+1. **Parallel Research**: It dispatches four specialized analyst agents in parallel to check a company's **Financial Health**, **Business Moat**, **News Sentiment**, and **Market Position** using live APIs (Yahoo Finance, NewsAPI, and Tavily).
+2. **Evidence Vault**: It gathers all retrieved facts, removes duplicates, and stores them in a secure evidence vault with trackable IDs (`ev-1`, `ev-2`).
+3. **Committee Debate**: A **Bull Committee** and **Bear Committee** evaluate the evidence. They build the strongest positive and negative arguments, assign their own confidence scores, and determine recommendations.
+4. **Chairperson Decision**: The Chairperson (acting as the CIO) reviews the debate, flags any contradictions, lists missing information, and outputs a final consensus verdict (**BUY**, **HOLD**, or **SELL**) with a detailed reasoning explanation.
+5. **Confidence Breakdown**: Explains dynamically why the confidence score is at its current level (e.g. subtracting points for missing news, low source reliability, or conflicting analyst viewpoints).
 
 ---
 
-## Installation & Setup
+##  How to Run It — Setup and Run Steps
+
+Follow these simple steps to run CONSENSUS on your local machine:
 
 ### 1. Prerequisites
-- Node.js 18 or later
-- npm or pnpm
+Ensure you have **Node.js** (version 18 or later) installed.
 
-### 2. Install Dependencies
+### 2. Download and Install
+Extract the downloaded ZIP folder, open your terminal inside the project directory, and install dependencies:
 ```bash
 npm install
 ```
 
 ### 3. Environment Variables
-Create a `.env.local` file in the root directory:
+Create a file named `.env.local` in the root folder of the project and add the following keys:
 ```env
+# Gemini API Key for AI Agents
 GEMINI_API_KEY=your_gemini_api_key
+
+# News API Key for news sentiment headlines (from newsapi.org)
 NEWS_API_KEY=your_news_api_key
+
+# Tavily Search API Key for market research (from tavily.com)
 TAVILY_API_KEY=your_tavily_api_key
+
+# Public App Brand Name
 NEXT_PUBLIC_APP_NAME=CONSENSUS
 
-# Optional: Upstash Redis for distributed caching and rate limiting
+# Credentials for logging into the dashboard (Defaults to: shane / 86077ar)
+AUTH_USERNAME=shane
+AUTH_PASSWORD=86077ar
+
+# (Optional) Upstash Redis Configuration for caching (prevents duplicate API calls)
 UPSTASH_REDIS_REST_URL=your_upstash_redis_url
 UPSTASH_REDIS_REST_TOKEN=your_upstash_redis_token
-
-# Optional: LangSmith native tracing
-LANGCHAIN_TRACING_V2=true
-LANGCHAIN_API_KEY=your_langsmith_api_key
 ```
 
-### 4. Run Development Server
+### 4. Run the Platform
+Start the local development server:
 ```bash
 npm run dev
 ```
-Open [http://localhost:3000](http://localhost:3000) to view the application.
+Open **[http://localhost:3000](http://localhost:3000)** in your browser. Log in using your configured credentials (default: username `shane` and password `86077ar`) to start researching stocks.
 
 ---
 
-## AI Workflow Details
+## How it Works — Approach and Architecture
 
-- **Planner**: Maps query structures to execution plans.
-- **Ticker Resolver**: Excludes mutual funds, ETFs, and indices, resolving queries to verified stock symbols.
-- **Research Coordinator**: Fetches financial details, stock charts, news, and search contexts in parallel.
-- **Financial Analyst**: Computes margin growths, balance sheet quick ratios, and EPS health scores.
-- **Business Analyst**: Scores product line configurations and economic moats (Wide, Narrow, None).
-- **News Analyst**: Renders public and media sentiment scores (-100 to +100) and article impacts.
-- **Market Analyst**: Outlines macroeconomic trends and competitor share mappings.
-- **Evidence Collector**: Merges, deduplicates, and assigns unique, trackable IDs (`ev-1`, `ev-2`) to raw claims.
-- **Bull / Bear / Risk Analysts**: Assemble argument matrices with strict, evidence-only access constraints.
-- **Judge Agent**: CIO synthesis that weighs evidence credibility, flags contradictions, and determines BUY/HOLD/SELL verdicts.
-- **Consensus Engine**: Applies weighted scoring: Financial (30%), Business (20%), News (15%), Market (10%), Bull (10%), Bear (10%), Risk (5%). Deducts points for contradictions and missing details.
+CONSENSUS is built using a **Clean Architecture** layout:
+
+```
+[User Interface (Next.js 15)]
+         │
+         ▼
+[API Routes & Cache Layer]
+         │
+         ▼
+[LangGraph Orchestration] ──► [Specialized Agents (Gemini)]
+         │
+         ▼
+[Evidence Collector] ─────► [Bull / Bear / Risk Debater Nodes]
+         │
+         ▼
+[Judge CIO Verdict] ──────► [Consensus Weighted Score Engine]
+```
+
+### Flow breakdown:
+- **LangGraph.js State Management**: We represent the workflow as a graph where each agent node executes in order, passing structured data to the next node.
+- **Parallel Execution**: Coordinator dispatches Financial, Moat, News, and Market tasks simultaneously to reduce user wait times.
+- **Deduplicated Evidence**: The central collector matches claims against source URLs and citations, preventing the LLM from fabricating facts.
+- **Consensus Calculation**: The final score is mathematically calculated:
+  `Financial (30%) + Business (20%) + News (15%) + Market (10%) + Bull Case (10%) + Bear Case (10%) + Risk (5%)`.
+  It automatically deducts confidence points for contradictions and missing details flagged by the CIO.
 
 ---
 
-## Legal and Non-Advice Disclaimer
+## Key Decisions & Trade-Offs
 
-> **IMPORTANT NOTICE:** Consensus is an educational/portfolio demonstration. Nothing here is financial advice. Do not make investment decisions based solely on this output. All company data is sourced from third-party APIs (Yahoo Finance, NewsAPI, Tavily) and is not guaranteed accurate, current, or complete.
+### 1. What We Chose and Why:
+- **Gemini 2.5 Flash / Gemini 1.5 Pro**: We selected Gemini for its speed, high context windows, and native Zod schema support for structured JSON parsing.
+- **LangGraph.js over LangChain Chains**: LangGraph allows us to define clear execution flows, coordinate parallel tasks, and trace state step-by-step.
+- **In-Memory & Redis Hybrid Cache**: If Upstash keys aren't set, the app falls back to in-memory caching. This keeps setup fast for local testing while remaining production-grade.
+- **Clean Dark Theme UI**: We used Next.js and Tailwind CSS with custom cards to build a professional dark-themed research dashboard.
+
+### 2. What We Left Out (Trade-offs):
+- **Live Trading Integration**: To keep the platform focused purely on research and risk analysis, we did not add actual trading actions.
+- **Permanent Database Storage**: We relied on caching rather than a permanent database (like MongoDB or PostgreSQL) to keep setup trivial for developers.
 
 ---
 
-## License
-MIT License.
+## Example Runs
+
+Below are summaries of how the AI committee analyzed two different stocks:
+
+### 1. Apple Inc. ($AAPL)
+- **Consensus Score**: 85/100
+- **CIO Verdict**: **BUY** (Confidence: 80%)
+- **Bull Case**: Robust services revenue growth, very high free cash flow generation, and a wide economic moat.
+- **Bear Case**: Slowing hardware sales and premium stock valuation.
+- **Chairperson Summary**: The final consensus favored the Bull Committee due to Apple's dominant cash flows and ecosystem strength outweighing valuation premiums.
+
+### 2. Tesla Inc. ($TSLA)
+- **Consensus Score**: 62/100
+- **CIO Verdict**: **HOLD** (Confidence: 65%)
+- **Bull Case**: Global leadership in electric vehicles, strong cash positions, and energy storage growth.
+- **Bear Case**: Pricing pressure, declining margins, and regulatory uncertainties.
+- **Chairperson Summary**: The committee chose a neutral HOLD stance because the EV margin contraction and regulatory risks offset the company's market leadership.
+
+---
+
+## What We Would Improve With More Time
+
+1. **PDF Earnings Reports Upload**: Let users upload custom PDFs (like SEC 10-K filings or earnings reports) for the AI agents to parse.
+2. **Detailed Financial Charts**: Add historical graphs for debt-to-equity ratios, profit margins, and EPS over the last 5 years.
+3. **PDF Export**: Generate downloadable, professionally formatted PDF summaries of the committee's final debate and report.
+
+---
+
+## LLM Chat Session Transcript & Logs (Bonus Points)
+
+During the development of this project, we pair-programmed and chatted with the Gemini 3.5 Flash assistant. You can view the full transcript of this conversation to understand our thought process and implementation steps.
+
+- **Conversation Transcript Path**: 
+  - Token-efficient log: [transcript.jsonl](file:///C:/Users/Piyush/.gemini/antigravity-ide/brain/5a6053f6-8e50-4147-906b-2f703e6f3c3f/.system_generated/logs/transcript.jsonl)
+  - Full detailed logs: [transcript_full.jsonl](file:///C:/Users/Piyush/.gemini/antigravity-ide/brain/5a6053f6-8e50-4147-906b-2f703e6f3c3f/.system_generated/logs/transcript_full.jsonl)
+- **Visual Walkthrough & Verification Video**: [walkthrough.md](file:///C:/Users/Piyush/.gemini/antigravity-ide/brain/5a6053f6-8e50-4147-906b-2f703e6f3c3f/walkthrough.md)

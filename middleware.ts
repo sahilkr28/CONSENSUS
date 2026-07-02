@@ -58,8 +58,8 @@ export async function middleware(request: NextRequest) {
 
   // 2. If authenticated and trying to access the login page, redirect to home
   if (isAuthenticated && isAuthPage) {
-    const dashboardUrl = new URL('/dashboard', request.url);
-    return NextResponse.redirect(dashboardUrl);
+    const homeUrl = new URL('/', request.url);
+    return NextResponse.redirect(homeUrl);
   }
 
   return NextResponse.next();

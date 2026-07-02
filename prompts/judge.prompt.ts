@@ -18,6 +18,7 @@ Output in this exact JSON format:
   "strongestBearArguments": ["1-3 key bear arguments that represent real, validated risks or performance declines"],
   "strongestEvidence": ["the most robust, high-confidence evidence statements cited"],
   "weakestEvidence": ["unsubstantiated claims, or low-reliability citations flagged during evaluation"],
-  "missingInformation": ["important data points that were missing from research but critical to the decision"]
+  "missingInformation": ["important data points that were missing from research but critical to the decision"],
+  "chairpersonReason": "A short 2-3 sentence explanation describing why the final consensus recommendation favored one side over the other (Bull vs Bear), using only existing committee outputs and evidence without introducing new facts"
 }
 `;

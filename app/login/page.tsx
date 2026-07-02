@@ -28,7 +28,7 @@ export default function LoginPage() {
 
       if (response.data?.success) {
         router.refresh(); // Refresh page contexts
-        router.push('/dashboard'); // Direct to dashboard
+        router.push('/'); // Direct to home page
       } else {
         setError('Authentication response was invalid.');
       }
